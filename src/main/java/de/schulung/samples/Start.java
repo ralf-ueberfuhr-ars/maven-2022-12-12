@@ -8,6 +8,7 @@ public class Start {
 
     public static void main(String[] args) {
         logger.info("Anwendung startet.");
+        logger.info(new Person("Tom")::sayHello);
     }
 
 }
