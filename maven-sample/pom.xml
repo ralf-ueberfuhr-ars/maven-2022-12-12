@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.schulung.samples</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <!-- Standard: ../ -->
+    </parent>
+
+    <artifactId>maven-sample</artifactId>
+
+    <properties>
+        <logging.level>debug</logging.level>
+        <maven.compiler.debug>false</maven.compiler.debug>
+        <app.mainClass>de.schulung.samples.StartWithoutLogger</app.mainClass>
+    </properties>
+
+    <dependencies>
+        <!-- Versionen in Properties -->
+        <!-- Wo kommen die her? Gibt es neuere Versionen? -->
+        <!-- weitere Einstellungen notwendig? -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <profiles>
+        <profile>
+            <!-- mvn clean package -> KEIN Executable JAR -->
+            <!-- mvn clean package -Pexecutable -> Executable JAR -->
+            <id>executable</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jar-plugin</artifactId>
+                            <configuration>
+                                <archive>
+                                    <manifest>
+                                        <mainClass>${app.mainClass}</mainClass>
+                                    </manifest>
+                                </archive>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <!-- mvn clean package -Pci-build -> Build OHNE "release-only"-Tests -->
+            <id>ci-build</id>
+            <properties>
+                <excludedGroups>release-only</excludedGroups>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>
