@@ -117,13 +117,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>${maven-jar-plugin.version}</version>
-                    <configuration>
-                        <archive>
-                            <manifest>
-                                <mainClass>${app.mainClass}</mainClass>
-                            </manifest>
-                        </archive>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -153,4 +146,37 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <!-- mvn clean package -> KEIN Executable JAR -->
+            <!-- mvn clean package -Pexecutable -> Executable JAR -->
+            <id>executable</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jar-plugin</artifactId>
+                            <configuration>
+                                <archive>
+                                    <manifest>
+                                        <mainClass>${app.mainClass}</mainClass>
+                                    </manifest>
+                                </archive>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <!-- mvn clean package -Pci-build -> Build OHNE "release-only"-Tests -->
+            <id>ci-build</id>
+            <properties>
+                <excludedGroups>release-only</excludedGroups>
+            </properties>
+        </profile>
+    </profiles>
+
 </project>
